@@ -1,0 +1,28 @@
+{
+  "name": "outlook-module",
+  "version": "1.0.0",
+  "description": "Outlook add-in for creating logistics claims directly from emails",
+  "main": "taskpane.html",
+  "scripts": {
+    "install-certs": "office-addin-dev-certs install",
+    "uninstall-certs": "office-addin-dev-certs uninstall",
+    "start": "npm run serve",
+    "serve": "office-addin-dev-certs verify && http-server . -p 3000 -S -C ~/.office-addin-dev-certs/localhost.crt -K ~/.office-addin-dev-certs/localhost.key --cors",
+    "serve-check": "http-server . -p 3000 -S -C ~/.office-addin-dev-certs/localhost.crt -K ~/.office-addin-dev-certs/localhost.key --cors",
+    "validate": "office-addin-manifest validate manifest.xml"
+  },
+  "keywords": [
+    "outlook",
+    "office-addin",
+    "logistics",
+    "claims"
+  ],
+  "author": "Obsydian AI",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "office-addin-dev-certs": "^1.12.2",
+    "office-addin-manifest": "^1.12.2"
+  }
+}
+
