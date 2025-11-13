@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Obsydian AI - Logistics Claims</title>
+    <title>Obsydian AI</title>
     <link rel="stylesheet" type="text/css" href="taskpane.css" />
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
   </head>
@@ -12,6 +12,9 @@
       <!-- LANDING VIEW -->
       <div id="landingView">
         <div class="landing-content">
+          <div class="landing-logo-container">
+            <img src="assets/logo-mail.png" alt="Obsydian AI" class="landing-logo" />
+          </div>
           <h1>Log the claim directly with Obsydian AI</h1>
           <button id="createClaimBtn" class="primary-btn">Create a claim</button>
         </div>
@@ -20,8 +23,14 @@
       <!-- FORM VIEW -->
       <div id="formView" class="hidden">
         <div class="form-header">
-          <div class="back-btn-container">
-            <button id="backToLandingBtn" class="back-btn">← Back</button>
+          <div class="header-top">
+            <div class="logo-container">
+              <img src="assets/logo-mail.png" alt="Obsydian AI" class="header-logo" />
+              <span class="brand-name">Obsydian AI</span>
+            </div>
+            <div class="back-btn-container">
+              <button id="backToLandingBtn" class="back-btn">← Back</button>
+            </div>
           </div>
           <h2>Submit a claim</h2>
         </div>
@@ -123,6 +132,9 @@
       <!-- SUCCESS VIEW -->
       <div id="successView" class="hidden">
         <div class="success-container">
+          <div class="success-logo-container">
+            <img src="assets/logo-mail.png" alt="Obsydian AI" class="success-logo" />
+          </div>
           <h1 class="success-title">Claim Submitted</h1>
           <div class="success-claim-id">Claim ID: <span id="successClaimId">-</span></div>
 

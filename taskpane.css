@@ -84,6 +84,18 @@ body {
   min-height: 120px;
 }
 
+.landing-logo-container {
+  margin-bottom: 24px;
+}
+
+.landing-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
 .landing-content h1 {
   font-size: 24px;
   font-weight: 500;
@@ -164,6 +176,33 @@ body {
   flex-shrink: 0;
 }
 
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.brand-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
 .form-header h2 {
   font-size: 20px;
   font-weight: 600;
@@ -172,7 +211,7 @@ body {
 }
 
 .back-btn-container {
-  margin-bottom: 12px;
+  margin: 0;
 }
 
 #claimForm {
@@ -444,70 +483,111 @@ body {
   margin: 0 auto;
 }
 
+.success-logo-container {
+  margin-bottom: 20px;
+}
+
+.success-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
 .success-title {
   font-size: 28px;
   font-weight: 700;
   color: #111827;
   text-align: center;
-  margin: 0 0 12px 0;
+  margin: 0 0 16px 0;
   line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 .success-claim-id {
   font-size: 14px;
-  color: #374151;
+  color: #6b7280;
   text-align: center;
   margin-bottom: 32px;
   line-height: 1.5;
+  font-weight: 500;
+}
+
+.success-claim-id span {
+  color: #111827;
+  font-weight: 600;
 }
 
 .success-details-section {
   width: 100%;
   margin-bottom: 24px;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
 }
 
 .success-details-title {
   font-size: 16px;
   font-weight: 600;
   color: #111827;
-  margin: 0 0 16px 0;
+  margin: 0 0 20px 0;
+  letter-spacing: -0.01em;
 }
 
 .success-details-grid {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .success-detail-item {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.success-detail-item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
 .success-detail-label {
   font-size: 14px;
   color: #6b7280;
   font-weight: 500;
+  flex-shrink: 0;
+  min-width: 100px;
 }
 
 .success-detail-value {
   font-size: 14px;
   color: #111827;
-  font-weight: 400;
+  font-weight: 500;
+  text-align: right;
+  flex: 1;
+  word-break: break-word;
 }
 
 .success-message-box {
   width: 100%;
   margin-top: 24px;
   margin-bottom: 32px;
-  padding: 16px;
-  background-color: #f3f4f6;
-  border-radius: 8px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  border-radius: 10px;
   font-size: 14px;
-  color: #374151;
-  line-height: 1.5;
+  color: #0c4a6e;
+  line-height: 1.6;
   text-align: center;
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .success-buttons {
@@ -515,40 +595,54 @@ body {
   gap: 12px;
   width: 100%;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .success-btn-primary {
   background-color: #2563eb;
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
+  padding: 12px 28px;
+  border-radius: 8px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  min-width: 140px;
+  transition: all 0.2s ease;
+  min-width: 160px;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
 }
 
 .success-btn-primary:hover {
   background-color: #1d4ed8;
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+  transform: translateY(-1px);
+}
+
+.success-btn-primary:active {
+  transform: translateY(0);
 }
 
 .success-btn-secondary {
-  background-color: #f3f4f6;
+  background-color: #ffffff;
   color: #374151;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  padding: 12px 28px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  min-width: 140px;
+  transition: all 0.2s ease;
+  min-width: 160px;
 }
 
 .success-btn-secondary:hover {
-  background-color: #e5e7eb;
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+  transform: translateY(-1px);
+}
+
+.success-btn-secondary:active {
+  transform: translateY(0);
 }
 
 /* Loading view */

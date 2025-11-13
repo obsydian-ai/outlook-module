@@ -736,9 +736,9 @@ async function submitClaim(data) {
     }
   }
   
-  // Prepare payload (matching working curl format)
+  // Prepare payload (matching exact API structure)
   const payload = {
-    source: 'outlook',
+    source: 'zendesk',
     organizationId: API_ORGANIZATION_ID,
     userName: userName,
     shipment_trackingNumber: data.trackingNumber || '',
@@ -763,6 +763,7 @@ async function submitClaim(data) {
   
   if (!response.ok) {
     const errorText = await response.text();
+    console.error(`API Error: ${response.status} ${response.statusText}`, errorText);
     throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
   }
   
