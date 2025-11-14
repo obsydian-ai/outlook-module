@@ -738,7 +738,7 @@ async function submitClaim(data) {
   
   // Prepare payload (matching exact API structure)
   const payload = {
-    source: 'zendesk',
+    source: 'outlook',
     organizationId: API_ORGANIZATION_ID,
     userName: userName,
     shipment_trackingNumber: data.trackingNumber || '',
