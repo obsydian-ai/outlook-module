@@ -10,11 +10,12 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Obsydian AI - Logistics Claims" />
   <Description DefaultValue="Create and submit logistics claims directly from Outlook emails" />
-  <IconUrl DefaultValue="https://localhost:3000/assets/logo-mail.png" />
-  <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/logo-mail.png" />
+  <IconUrl DefaultValue="https://outlook-module-production.up.railway.app/assets/logo-mail.png" />
+  <HighResolutionIconUrl DefaultValue="https://outlook-module-production.up.railway.app/assets/logo-mail.png" />
   <SupportUrl DefaultValue="https://obsydianai.com" />
   <AppDomains>
     <AppDomain>api-obsydian.up.railway.app</AppDomain>
+    <AppDomain>outlook-module-production.up.railway.app</AppDomain>
   </AppDomains>
   <Hosts>
     <Host Name="Mailbox" />
@@ -27,7 +28,7 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://localhost:3000/taskpane.html" />
+        <SourceLocation DefaultValue="https://outlook-module-production.up.railway.app/taskpane.html" />
         <RequestedHeight>450</RequestedHeight>
       </DesktopSettings>
     </Form>
@@ -75,14 +76,14 @@
       </Hosts>
       <Resources>
         <bt:Images>
-          <bt:Image id="Icon.16x16" DefaultValue="https://localhost:3000/assets/logo-mail.png" />
-          <bt:Image id="Icon.32x32" DefaultValue="https://localhost:3000/assets/logo-mail.png" />
-          <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/logo-mail.png" />
+          <bt:Image id="Icon.16x16" DefaultValue="https://outlook-module-production.up.railway.app/assets/logo-mail.png" />
+          <bt:Image id="Icon.32x32" DefaultValue="https://outlook-module-production.up.railway.app/assets/logo-mail.png" />
+          <bt:Image id="Icon.80x80" DefaultValue="https://outlook-module-production.up.railway.app/assets/logo-mail.png" />
         </bt:Images>
         <bt:Urls>
           <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812" />
-          <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands.html" />
-          <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html" />
+          <bt:Url id="Commands.Url" DefaultValue="https://outlook-module-production.up.railway.app/commands.html" />
+          <bt:Url id="Taskpane.Url" DefaultValue="https://outlook-module-production.up.railway.app/taskpane.html" />
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="GroupLabel" DefaultValue="Obsydian AI" />
