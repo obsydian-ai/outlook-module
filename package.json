@@ -6,7 +6,8 @@
   "scripts": {
     "install-certs": "office-addin-dev-certs install",
     "uninstall-certs": "office-addin-dev-certs uninstall",
-    "start": "npm run serve",
+    "start": "npx http-server . -p ${PORT:-3000} -a 0.0.0.0",
+    "start:dev": "npm run serve",
     "serve": "office-addin-dev-certs verify && http-server . -p 3000 -S -C ~/.office-addin-dev-certs/localhost.crt -K ~/.office-addin-dev-certs/localhost.key --cors",
     "serve-check": "http-server . -p 3000 -S -C ~/.office-addin-dev-certs/localhost.crt -K ~/.office-addin-dev-certs/localhost.key --cors",
     "validate": "office-addin-manifest validate manifest.xml"

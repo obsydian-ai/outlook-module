@@ -414,7 +414,7 @@ function hideUpsFields() {
 }
 
 function validateForm(data) {
-  const requiredFields = ['trackingNumber', 'incidenceType', 'description', 'customerAddress'];
+  const requiredFields = ['trackingNumber', 'incidenceType', 'description', 'customerAddress', 'destinataryPhoneNumber'];
   const missingFields = requiredFields.filter(field => !data[field] || data[field].trim() === '');
   
   if (missingFields.length > 0) {
@@ -745,6 +745,7 @@ async function submitClaim(data) {
     shipment_carrierId: data.carrier || '',
     shipment_descriptionOfContents: data.contentsDescription || '[]',
     shipment_customerAddress: data.customerAddress || '',
+    shipment_destinataryPhoneNumber: data.destinataryPhoneNumber || '',
     incidence_incidenceType: data.incidenceType || '',
     incidence_description: data.description || '',
     incidence_actualAmount: data.actualAmount || '0.00',
