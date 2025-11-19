@@ -5,10 +5,10 @@
            xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" 
            xsi:type="MailApp">
   <Id>46ed7aa5-286f-407d-9366-015e9a86db9c</Id>
-  <Version>1.0.3.0</Version>
-  <ProviderName>Obsydian AI - Logistics Claims</ProviderName>
+  <Version>1.0.4.0</Version>
+  <ProviderName>Obsydian AI</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Obsydian AI - Logistics Claims" />
+  <DisplayName DefaultValue="Obsydian AI" />
   <Description DefaultValue="Create and submit logistics claims directly from Outlook emails" />
   <IconUrl DefaultValue="https://outlook-module-production.up.railway.app/assets/logo-mail.png" />
   <HighResolutionIconUrl DefaultValue="https://outlook-module-production.up.railway.app/assets/logo-mail.png" />
