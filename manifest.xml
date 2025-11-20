@@ -5,7 +5,7 @@
            xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" 
            xsi:type="MailApp">
   <Id>46ed7aa5-286f-407d-9366-015e9a86db9c</Id>
-  <Version>1.0.4.0</Version>
+  <Version>1.0.5.0</Version>
   <ProviderName>Obsydian AI</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Obsydian AI" />
@@ -96,4 +96,3 @@
     </VersionOverrides>
   </VersionOverrides>
 </OfficeApp>
-

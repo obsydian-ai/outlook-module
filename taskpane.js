@@ -12,9 +12,8 @@ Office.onReady((info) => {
 // Configuration
 const API_ENDPOINT = 'https://api-obsydian.up.railway.app/api/claims/create-claim';
 const API_AUTH_TOKEN = 'eyJhbGciOiJIUzI1NiIsImtpZCI6IjV3MGlwRldVbDhsNC9aNkUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL21reGVya2RybXBna29yanF0eHR3LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJiMDFjYmFlYi1kYjM0LTQ3Y2UtOTRjNy1hYzIyYjQ5MjZmNGMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzYxOTI0NzQ5LCJpYXQiOjE3NjE5MjExNDksImVtYWlsIjoicGFibG9Ab2JzeWRpYW5haS5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJvcmdhbml6YXRpb25faWQiOiJkZW1vX29yZ19pZCIsInByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzYxOTEzNDE2fV0sInNlc3Npb25faWQiOiIzMTBkMDM2OS1hY2M2LTQwZTEtYWMxNi02MGNlYmI5ZWYyN2UiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.Uu5qiNKsmubdCCfyLmOTXdcmIcdOanvn7zWr9uFn_QI';
-const API_ORGANIZATION_ID = 'demo_org_id';
-const GEMINI_API_KEY = 'AIzaSyD9ZNemQeajKaH1gS30RYC6eReiJdHnQWg';
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+const API_ORGANIZATION_ID = 'org_34HBEvgHrG2V6GVRn2FFqZbZvFU';
+const EXTRACT_API_ENDPOINT = 'http://localhost:5005/api/claims/extract-from-outlook-ticket';
 
 // Global state
 let currentView = 'landing';
@@ -619,72 +618,35 @@ async function fetchEmailContent() {
   });
 }
 
-// Gemini AI integration
+// Local API integration for claim extraction
 async function summarizeWithGemini(emailData) {
-  const emailText = `Subject: ${emailData.subject || ''}\n\nBody:\n${emailData.body || ''}`;
+  // Use HTML body as it contains the full email thread
+  const emailThread = emailData.htmlBody || emailData.body || '';
   
-  const prompt = `Analyze this Outlook email and extract information to pre-fill a logistics claim form. Return ONLY a valid JSON object with the following structure. If information is not available, use null for that field.
-
-Required JSON structure:
-{
-  "carrier": "ups_001" or null,
-  "trackingNumber": "string" or null,
-  "incidenceType": "DELIVERED_LATE" | "DAMAGED" | "LOST" | "NOT_DELIVERED" or null,
-  "description": "string" or null,
-  "customerAddress": "string" or null,
-  "contentsDescription": "string" or null,
-  "currency": "EUR" | "USD" | "GBP" or null,
-  "actualAmount": "number" or null
-}
-
-Guidelines:
-- Look for tracking numbers (patterns like TRK, UPS, FedEx, etc.)
-- Identify the type of incident (damaged, lost, late delivery, not delivered)
-- Extract customer addresses from the messages
-- Find descriptions of package contents
-- Look for monetary amounts and currency
-- Extract incident descriptions
-- If carrier is mentioned (UPS, FedEx, DHL, etc.), use "ups_001" for now
-- Return ONLY the JSON object, no additional text
-
-Email Content:
-${emailText}`;
-
   try {
-    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+    const response = await fetch(EXTRACT_API_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: [{
-          parts: [{ text: prompt }]
-        }],
-        generationConfig: {
-          temperature: 0.1,
-          topK: 40,
-          topP: 0.95,
-          maxOutputTokens: 1024,
-        }
+        comments: emailThread
       })
     });
     
     if (!response.ok) {
-      throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
     }
     
     const result = await response.json();
-    const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     
-    // Parse JSON - handle markdown code blocks
-    let jsonText = responseText.trim();
-    if (jsonText.startsWith('```json')) {
-      jsonText = jsonText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
-    } else if (jsonText.startsWith('```')) {
-      jsonText = jsonText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    // Extract data from nested response structure
+    if (result.success && result.data) {
+      return result.data;
     }
     
-    return JSON.parse(jsonText);
+    // Fallback: if structure is different, return the whole result
+    return result.data || result;
   } catch (error) {
-    console.error("Gemini API request failed:", error);
+    console.error("Local API request failed:", error);
     throw new Error(`Failed to extract form data: ${error.message}`);
   }
 }
@@ -692,7 +654,7 @@ ${emailText}`;
 // API submission
 async function submitClaim(data) {
   // Get user email from Outlook
-  let userName = 'user@example.com';
+  let userName = 'User undefined';
   try {
     if (Office?.context?.mailbox?.userProfile) {
       userName = Office.context.mailbox.userProfile.emailAddress || userName;
@@ -815,6 +777,11 @@ function prefillForm(extractedData) {
     if (extractedData.customerAddress) {
       const addressTextarea = document.getElementById('customerAddress');
       if (addressTextarea) addressTextarea.value = extractedData.customerAddress;
+    }
+    
+    if (extractedData.destinataryPhoneNumber) {
+      const phoneInput = document.getElementById('destinataryPhoneNumber');
+      if (phoneInput) phoneInput.value = extractedData.destinataryPhoneNumber;
     }
     
     if (extractedData.contentsDescription) {
