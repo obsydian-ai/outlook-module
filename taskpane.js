@@ -177,6 +177,16 @@ function setupEventListeners(elements) {
         const items = getShipmentItems();
         const totalAmount = items.reduce((sum, it) => sum + (Number(it.amount) || 0) * (Number(it.quantity) || 0), 0);
         
+        // Determine primary currency (most common currency from items, or default to EUR)
+        const currencyCounts = {};
+        items.forEach(it => {
+          const currency = it.currency || 'EUR';
+          currencyCounts[currency] = (currencyCounts[currency] || 0) + 1;
+        });
+        const primaryCurrency = Object.keys(currencyCounts).reduce((a, b) => 
+          currencyCounts[a] > currencyCounts[b] ? a : b, 'EUR'
+        ) || 'EUR';
+        
         const formattedItems = items.map((it, index) => ({
           id: `item-${index}`,
           description: it.description || '',
@@ -187,7 +197,8 @@ function setupEventListeners(elements) {
 
         const formData = new FormData(claimForm);
         const claimData = Object.fromEntries(formData.entries());
-        claimData.actualAmount = totalAmount.toFixed(2);
+        claimData.claimedAmount = totalAmount.toFixed(2);
+        claimData.currency = primaryCurrency;
         claimData.contentsDescription = contentsDescription;
         
         if (!validateForm(claimData)) {
@@ -698,19 +709,26 @@ async function submitClaim(data) {
     }
   }
   
+  // Normalize carrier ID format (e.g., "ups_001" -> "ups")
+  let carrierId = data.carrier || '';
+  if (carrierId.includes('_')) {
+    carrierId = carrierId.split('_')[0];
+  }
+  
   // Prepare payload (matching exact API structure)
   const payload = {
     source: 'outlook',
     organizationId: API_ORGANIZATION_ID,
     userName: userName,
     shipment_trackingNumber: data.trackingNumber || '',
-    shipment_carrierId: data.carrier || '',
+    shipment_carrierId: carrierId,
     shipment_descriptionOfContents: data.contentsDescription || '[]',
     shipment_customerAddress: data.customerAddress || '',
     shipment_destinataryPhoneNumber: data.destinataryPhoneNumber || '',
     incidence_incidenceType: data.incidenceType || '',
     incidence_description: data.description || '',
-    incidence_actualAmount: data.actualAmount || '0.00',
+    incidence_claimedAmount: data.claimedAmount || data.actualAmount || '0.00',
+    currency: data.currency || 'EUR',
     documents: documents.length > 0 ? documents : []
   };
   
