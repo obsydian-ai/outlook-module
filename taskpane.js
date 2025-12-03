@@ -13,7 +13,7 @@ Office.onReady((info) => {
 const API_ENDPOINT = 'https://api-obsydian.up.railway.app/api/claims/create-claim';
 const API_AUTH_TOKEN = 'eyJhbGciOiJIUzI1NiIsImtpZCI6IjV3MGlwRldVbDhsNC9aNkUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL21reGVya2RybXBna29yanF0eHR3LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJiMDFjYmFlYi1kYjM0LTQ3Y2UtOTRjNy1hYzIyYjQ5MjZmNGMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzYxOTI0NzQ5LCJpYXQiOjE3NjE5MjExNDksImVtYWlsIjoicGFibG9Ab2JzeWRpYW5haS5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJvcmdhbml6YXRpb25faWQiOiJkZW1vX29yZ19pZCIsInByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzYxOTEzNDE2fV0sInNlc3Npb25faWQiOiIzMTBkMDM2OS1hY2M2LTQwZTEtYWMxNi02MGNlYmI5ZWYyN2UiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.Uu5qiNKsmubdCCfyLmOTXdcmIcdOanvn7zWr9uFn_QI';
 const API_ORGANIZATION_ID = 'org_34HBEvgHrG2V6GVRn2FFqZbZvFU';
-const EXTRACT_API_ENDPOINT = 'http://api-obsydian.up.railway.app/api/claims/extract-from-outlook-ticket';
+const EXTRACT_API_ENDPOINT = 'https://api-obsydian.up.railway.app/api/claims/extract-from-outlook-ticket';
 
 // Global state
 let currentView = 'landing';
@@ -91,7 +91,7 @@ function setupEventListeners(elements) {
       prefillForm(extractedFormData);
     } catch (error) {
       console.error("Error in Create Claim process:", error);
-      alert(`Warning: Could not complete the process (${error.message}). You can still create a claim manually.`);
+      showMessage(`Warning: Could not complete the process (${error.message}). You can still create a claim manually.`, 'warning');
       showView('form');
     }
   });
@@ -114,7 +114,7 @@ function setupEventListeners(elements) {
       if (claimId && claimId !== '-') {
         window.open(`https://dashboard.obsydianai.com/claims/${claimId}`, '_blank');
       } else {
-        alert('Claim ID not available.');
+        showMessage('Claim ID not available.', 'warning');
       }
     });
   }
@@ -221,7 +221,7 @@ function setupEventListeners(elements) {
       } catch (error) {
         console.error("Error submitting claim:", error);
         showView('form');
-        alert('Error submitting claim: ' + error.message);
+        showMessage('Error submitting claim: ' + error.message, 'error');
       } finally {
         claimForm._submitting = false;
       }
@@ -247,6 +247,31 @@ function updateLoadingText(text) {
   const loadingTextElement = document.getElementById('loadingText');
   if (loadingTextElement) {
     loadingTextElement.textContent = text;
+  }
+}
+
+// Show message (replaces alert() which is not supported in Office.js)
+function showMessage(message, type = 'warning') {
+  // Try to use Office.js dialog API if available
+  if (Office?.context?.ui?.displayDialogAsync) {
+    // For now, fall back to console and UI message
+    console.warn(message);
+  } else {
+    console.warn(message);
+  }
+  
+  // Show message in UI by temporarily updating loading text or creating a message element
+  const loadingTextElement = document.getElementById('loadingText');
+  if (loadingTextElement) {
+    const originalText = loadingTextElement.textContent;
+    loadingTextElement.textContent = message;
+    loadingTextElement.style.color = type === 'error' ? '#dc2626' : '#d97706';
+    
+    // Restore after 5 seconds
+    setTimeout(() => {
+      loadingTextElement.textContent = originalText;
+      loadingTextElement.style.color = '';
+    }, 5000);
   }
 }
 
@@ -305,7 +330,7 @@ async function handleFileUpload(event, fileNameElementId) {
     // Validate file type
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
-      alert('Please upload a PDF, JPG, or PNG file.');
+      showMessage('Please upload a PDF, JPG, or PNG file.', 'warning');
       event.target.value = '';
       return;
     }
@@ -313,7 +338,7 @@ async function handleFileUpload(event, fileNameElementId) {
     // Validate file size (max 10MB)
     const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
-      alert('File size must be less than 10MB.');
+      showMessage('File size must be less than 10MB.', 'warning');
       event.target.value = '';
       return;
     }
@@ -428,14 +453,14 @@ function validateForm(data) {
   const missingFields = requiredFields.filter(field => !data[field] || data[field].trim() === '');
   
   if (missingFields.length > 0) {
-    alert(`Please fill in all required fields: ${missingFields.join(', ')}`);
+    showMessage(`Please fill in all required fields: ${missingFields.join(', ')}`, 'warning');
     return false;
   }
   
   // Validate proof of purchase file
   const proofOfPurchaseInput = document.getElementById('proofOfPurchase');
   if (proofOfPurchaseInput && !proofOfPurchaseInput.files[0]) {
-    alert('Please upload a proof of purchase file');
+    showMessage('Please upload a proof of purchase file', 'warning');
     return false;
   }
   
@@ -445,17 +470,17 @@ function validateForm(data) {
     if (item.amount) {
       const amountStr = item.amount.toString();
       if (!amountStr.includes('.')) {
-        alert(`Amount must include a decimal point (e.g., ${item.amount}.00). Please check item: ${item.description || 'unnamed item'}`);
+        showMessage(`Amount must include a decimal point (e.g., ${item.amount}.00). Please check item: ${item.description || 'unnamed item'}`, 'warning');
         return false;
       }
       const decimalParts = amountStr.split('.');
       if (decimalParts.length === 2 && decimalParts[1].length < 2) {
-        alert(`Amount must have at least 2 decimal places (e.g., ${item.amount}0). Please check item: ${item.description || 'unnamed item'}`);
+        showMessage(`Amount must have at least 2 decimal places (e.g., ${item.amount}0). Please check item: ${item.description || 'unnamed item'}`, 'warning');
         return false;
       }
       const numValue = parseFloat(amountStr);
       if (isNaN(numValue) || numValue < 0) {
-        alert(`Please enter a valid amount for item: ${item.description || 'unnamed item'}`);
+        showMessage(`Please enter a valid amount for item: ${item.description || 'unnamed item'}`, 'warning');
         return false;
       }
     }
